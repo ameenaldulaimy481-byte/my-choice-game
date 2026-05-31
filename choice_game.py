@@ -43,7 +43,7 @@ else:
             بصادق الود والمحبة نتشرف<br>
             بدعوتكم لحضور حفل زفاف
         </p>
-        <div class="names">فاطمة وجميع زمايلها</div>
+        <div class="names">فاطمة و معمر صقلاوية</div>
         <div style="font-size: 50px; margin: 20px 0;">🌸</div>
         <p class="main-text">وذلك بمشيئة الله تعالى</p>
         <div style="display: flex; justify-content: space-around; margin-top: 30px;">
