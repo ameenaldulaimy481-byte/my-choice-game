@@ -1,54 +1,42 @@
-import flet as ft
+import streamlit as st
 from datetime import datetime, timedelta
 
-def main(page: ft.Page):
-    page.title = "دعوة زفاف"
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-    page.theme_mode = ft.ThemeMode.LIGHT
-    page.bgcolor = "#FDFBF7" # لون كريمي هادئ
+# إعداد الصفحة
+st.set_page_config(page_title="دعوة زفاف", page_icon="💍")
 
-    # حساب التاريخ بعد أسبوع
-    wedding_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
+# إخفاء قائمة Streamlit الافتراضية
+hide_menu_style = """
+        <style>
+        #MainMenu {visibility: hidden;}
+        footer {visibility: hidden;}
+        </style>
+        """
+st.markdown(hide_menu_style, unsafe_allow_html=True)
 
-    def show_invite(e):
-        circle_container.visible = False
-        invite_card.visible = True
-        page.update()
+# حساب التاريخ (بعد أسبوع من اليوم)
+wedding_date = (datetime.now() + timedelta(days=7)).strftime("%Y-%m-%d")
 
-    # الدائرة (البوتن)
-    circle_container = ft.Container(
-        content=ft.FilledButton(
-            content=ft.Text("اضغط لفتح الدعوة", size=20, weight="bold"),
-            style=ft.ButtonStyle(shape=ft.CircleBorder(), padding=40),
-            on_click=show_invite,
-            bgcolor="#C5A059" # لون ذهبي
-        ),
-        width=250, height=250,
-        alignment=ft.alignment.center,
-    )
+# استخدام session_state لإدارة ظهور الدعوة
+if 'show_invite' not in st.session_state:
+    st.session_state.show_invite = False
 
-    # كارت الدعوة المرتب
-    invite_card = ft.Container(
-        content=ft.Column([
-            ft.Text("دعوة زفاف", size=32, weight="bold", color="#8B7355"),
-            ft.Divider(),
-            ft.Text("يتشرف زينب وعبدالله بدعوتكم لحفل زفافهم السعيد", size=20, text_align="center"),
-            ft.Container(height=20),
-            ft.Text(f"التاريخ: {wedding_date}", size=18, weight="bold"),
-            ft.Text("الموقع: بغداد - العامرية", size=18),
-            ft.Container(height=30),
-            ft.Text("تنورونا وتشرفونا!", size=22, weight="bold", color="#8B7355"),
-            ft.Container(height=20),
-            ft.Text("ملاحظة: نعتذر عن استقبال فاطمة في الحفل", size=14, color="red", italic=True),
-        ], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-        padding=40,
-        border=ft.border.all(2, "#C5A059"),
-        border_radius=20,
-        visible=False,
-        width=400,
-    )
-
-    page.add(circle_container, invite_card)
-
-ft.app(target=main)
+# الواجهة
+if not st.session_state.show_invite:
+    # تنسيق الزر الدائري
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.write("")
+        st.write("")
+        if st.button("اضغط هنا لفتح الدعوة", use_container_width=True):
+            st.session_state.show_invite = True
+            st.rerun()
+else:
+    # محتوى الدعوة
+    st.markdown("<h1 style='text-align: center; color: #8B7355;'>دعوة زفاف</h1>", unsafe_allow_html=True)
+    st.markdown("---")
+    st.markdown("<h3 style='text-align: center;'>يتشرف زينب وعبدالله بدعوتكم لحفل زفافهم السعيد</h3>", unsafe_allow_html=True)
+    st.write(f"**التاريخ:** {wedding_date}")
+    st.write("**الموقع:** بغداد - العامرية")
+    st.markdown("<h2 style='text-align: center; color: #8B7355;'>تنورونا وتشرفونا!</h2>", unsafe_allow_html=True)
+    
+    st.error("ملاحظة: نعتذر عن استقبال فاطمة في الحفل")
